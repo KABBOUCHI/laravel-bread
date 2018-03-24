@@ -9,10 +9,8 @@
     <div class="row justify-content-center">
         <div class="col-md-8">
             <div class="card">
-                <div class="card-header text-right">
-
-                    <h5>Edit {{ $data['name'] }}</h5>
-
+                <div class="card-header">
+                    Edit {{ $data['name'] }}
                 </div>
                 <div class="card-body">
                     @if ($errors->any())

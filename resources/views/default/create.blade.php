@@ -9,10 +9,8 @@
     <div class="row justify-content-center">
         <div class="col-md-8">
             <div class="card">
-                <div class="card-header text-right">
-
-                    <h5>Create new {{ $data['name'] }}</h5>
-
+                <div class="card-header">
+                    Create new {{ $data['name'] }}
                 </div>
                 <div class="card-body">
                     @if ($errors->any())
