@@ -1,6 +1,5 @@
 <?php namespace KABBOUCHI\Bread;
 
-use Illuminate\Routing\Route;
 use Illuminate\Support\ServiceProvider;
 
 class BreadServiceProvider extends ServiceProvider
@@ -11,6 +10,7 @@ class BreadServiceProvider extends ServiceProvider
      * @var bool
      */
     protected $defer = false;
+
     /**
      * Bootstrap the application events.
      *
@@ -20,6 +20,12 @@ class BreadServiceProvider extends ServiceProvider
     {
         $this->registerResources();
     }
+
+    private function registerResources()
+    {
+        $this->loadViewsFrom(__DIR__ . '/../resources/views', 'bread');
+    }
+
     /**
      * Register the service provider.
      *
@@ -27,11 +33,20 @@ class BreadServiceProvider extends ServiceProvider
      */
     public function register()
     {
+        $this->mergeConfigFrom(
+            __DIR__ . '/../config/bread.php', 'bread'
+        );
+
+        $this->registerCommands();
     }
 
-    private function registerResources()
+    private function registerCommands()
     {
-        $this->loadViewsFrom(__DIR__.'/../resources/views', 'bread');
+        if ($this->app->runningInConsole()) {
+            $this->commands([
+                Console\BreadMakeCommand::class,
+            ]);
+        }
     }
 
 }

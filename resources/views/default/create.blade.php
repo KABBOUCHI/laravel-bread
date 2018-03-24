@@ -1,20 +1,20 @@
 @extends(config('bread.layout.master'))
+
 @php
     use KABBOUCHI\Bread\Http\BreadType as BreadType;
     extract($data);
 @endphp
 
-
 @section(config('bread.layout.content'))
     <div class="row">
         <div class="col-lg-12">
-            <div class="ibox float-e-margins">
-                <div class="ibox-title">
+            <div class="panel panel-info">
+                <div class="panel-header">
 
-                    <h5>Edit {{ $data['name'] }}</h5>
+                    <h5>Create new {{ $data['name'] }}</h5>
 
                 </div>
-                <div class="ibox-content">
+                <div class="panel-body">
                     @if ($errors->any())
                         <div class="alert alert-danger">
                             <ul>
@@ -24,10 +24,9 @@
                             </ul>
                         </div>
                     @endif
-                    <form action="{{ route($data['as'].'update',$model) }}" method="post" class="form-horizontal"
+                    <form action="{{ route($data['as'].'store')}}" method="post" class="form-horizontal"
                           enctype="multipart/form-data">
                         {{ csrf_field() }}
-                        {{method_field('PATCH')}}
 
                         @foreach($fields as $key => $item)
                             <div class="form-group">
@@ -40,30 +39,30 @@
                                                id="{{$key}}"
                                                class="form-control"
                                                name="{{$key}}"
-                                               value="{{ old($key,$model->{$key}) }}"
-                                               @if(str_contains("required",$item['update_validation'])) required @endif
+                                               value="{{ old($key) }}"
+                                               @if(str_contains("required",$item['validation'])) required @endif
                                         >
                                     @elseif($item['type'] == BreadType::EMAIL)
                                         <input type="email"
                                                id="{{$key}}"
                                                class="form-control"
                                                name="{{$key}}"
-                                               value="{{ old($key,$model->{$key}) }}"
-                                               @if(str_contains("required",$item['update_validation'])) required @endif
+                                               value="{{ old($key) }}"
+                                               @if(str_contains("required",$item['validation'])) required @endif
                                         >
                                     @elseif($item['type'] == BreadType::PASSWORD)
                                         <input type="password"
                                                id="{{$key}}"
                                                class="form-control"
                                                name="{{$key}}"
-                                               value="{{ old($key,$model->{$key}) }}"
-                                               @if(str_contains("required",$item['update_validation'])) required @endif
+                                               value="{{ old($key) }}"
+                                               @if(str_contains("required",$item['validation'])) required @endif
                                         >
                                     @elseif($item['type'] == BreadType::SELECT)
                                         <select name="{{$key}}" id="{{$key}}" class="form-control">
                                             @foreach($item['select']['data'] as $option)
                                                 <option value="{{$option[$item['select']['value']]}}"
-                                                        @if(old($key,$model->{$key}) == $option[$item['select']['value']])
+                                                        @if(old($key) == $option[$item['select']['value']])
                                                         selected
                                                         @endif
                                                 > {{$option[$item['select']['name']]}}</option>
@@ -74,14 +73,14 @@
                                                id="{{$key}}"
                                                class="form-control"
                                                name="{{$key}}"
-                                               @if(str_contains("required",$item['update_validation'])) required @endif
+                                               @if(str_contains("required",$item['validation'])) required @endif
                                         >
                                     @elseif($item['type'] == BreadType::DATE)
                                         <input type="date"
                                                id="{{$key}}"
                                                class="form-control"
                                                name="{{$key}}"
-                                               @if(str_contains("required",$item['update_validation'])) required @endif
+                                               @if(str_contains("required",$item['validation'])) required @endif
                                         >
 
                                     @elseif($item['type'] == BreadType::IMAGE)
@@ -89,15 +88,15 @@
                                                id="{{$key}}"
                                                class="form-control"
                                                name="{{$key}}"
-                                               @if(str_contains("required",$item['update_validation'])) required @endif
+                                               @if(str_contains("required",$item['validation'])) required @endif
                                         >
                                     @elseif($item['type'] == BreadType::TEXT_AREA || $item['type'] == BreadType::RICH_TEXT)
                                         <textarea
                                                 id="{{$key}}"
                                                 class="form-control {{  $item['type'] == BreadType::RICH_TEXT ? 'rich-text' : '' }}"
                                                 name="{{$key}}"
-                                                @if(str_contains("required",$item['update_validation'])) required @endif
-                                        >{{ old($key,$model->{$key}) }}</textarea>
+                                                @if(str_contains("required",$item['validation'])) required @endif
+                                        >{{ old($key) }}</textarea>
                                     @endif
                                 </div>
                             </div>
@@ -105,7 +104,7 @@
 
                         <div class="form-group">
                             <div class="col-lg-offset-2 col-lg-10">
-                                <button type="submit" class="btn btn-primary pull-right">Save</button>
+                                <button type="submit" class="btn btn-primary pull-right">Create</button>
                             </div>
                         </div>
                     </form>

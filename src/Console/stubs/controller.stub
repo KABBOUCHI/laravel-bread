@@ -1,0 +1,24 @@
+<?php
+
+namespace DummyNamespace;
+
+use DummyFullModelClass;
+use Illuminate\Http\Request;
+use DummyRootNamespaceHttp\Controllers\Controller;
+use KABBOUCHI\Bread\Http\Controllers\BreadController;
+use KABBOUCHI\Bread\Http\BreadType;
+
+class DummyClass extends BreadController
+{
+    protected $modelClass = DummyModelClass::class;
+
+    public function getFieldOptions()
+    {
+        return [
+            'name' => [
+                'type'       => BreadType::TEXT,
+                'validation' => ['required']
+            ],
+        ];
+    }
+}

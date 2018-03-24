@@ -3,16 +3,16 @@
 @section(config('bread.layout.content'))
     <div class="row">
         <div class="col-lg-12">
-            <div class="ibox float-e-margins">
-                <div class="ibox-title">
-                    <div class="ibox-tools">
+            <div class="box box-primary">
+                <div class="box-header text-right">
+                    <div class="box-title">
                         <a class="btn btn-primary" href="{{ route($data['as'].'create') }}">
                             Add new {{ $data['name'] }}
                         </a>
                     </div>
 
                 </div>
-                <div class="ibox-content">
+                <div class="box-body">
                     {{ $tableView->render() }}
                 </div>
             </div>

@@ -7,11 +7,15 @@ use Illuminate\Support\Facades\Route;
 
 class Bread extends Facade
 {
-    public static function routes($name, $controller)
+    public static function routes($name, $controller = null)
     {
         $name = strtolower($name);
 
-        Route::get("/{$name}", "{$controller}@index")->name("{$name}");
+        if (!$controller) {
+            $controller = ucfirst($name) . "Controller";
+        }
+
+        Route::get("/{$name}", "{$controller}@index")->name("{$name}.index");
         Route::post("/{$name}", "{$controller}@store")->name("{$name}.store");
         Route::get("/{$name}/create", "$controller@create")->name("{$name}.create");
         Route::get("/{$name}/{model}/edit", "{$controller}@edit")->name("{$name}.edit");

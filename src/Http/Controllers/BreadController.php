@@ -1,124 +1,105 @@
 <?php namespace KABBOUCHI\Bread\Http\Controllers;
 
 
+use App\Http\Controllers\Controller;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\UploadedFile;
+use KABBOUCHI\Bread\Http\BreadType;
 
 
+/**
+ * @property  Model modelClass
+ */
 class BreadController extends Controller
 {
-    public $theme = "inspinia";
-
-    public $name = "Bread";
-
-    public $as = "bread.";
-
-    /** @var Model $modelClass */
-    public $modelClass;
-
-    public $redirectTo = '/';
-
-    public $tableFields = [
-        'ID'   => 'id',
-        'Name' => 'name',
-    ];
-
-    public $types = [
-        'name' => 'text',
-    ];
-
-    public $createValidation = ['name' => 'required'];
-    public $updateValidation = null;
-
-    public $selects = [];
-//    public $selects = [
-//        'combat_sub_category_id' => 'categories'
-//    ];
     /**
      * @return \Illuminate\Http\RedirectResponse
      */
     public function index()
     {
-        $model = $this->modelClass::all();
+        /** @var Model $model */
+        $model = new $this->modelClass;
+        if ($model->usesTimestamps()) {
+            $model = $model->latest()->get();
+
+        } else {
+            $model = $model->all();
+        }
 
         $tableView = tableView($model)
             ->setTableClass('table table-striped table-hover');
 
-        foreach ($this->getTableFields() as $key => $value)
-            $tableView->column($key, $value);
+        if (count($this->getTableFields())) {
+            foreach ($this->getTableFields() as $key => $value)
+                $tableView->column($key, $value);
+        } else {
+            if ($model->count() > 0) {
+                $array = $model->first()->toArray();
 
+                foreach ($array as $key => $value) {
+                    $tableView->column(str_replace('_', ' ', ucfirst($key)), $key);
+                }
+            }
+        }
 
         $tableView->column(function ($model) {
             return '<a class="btn-white btn btn-xs" href="' . route($this->as . 'edit', $model) . '">Edit</a> &nbsp;' .
                 '<a class="btn-danger btn btn-xs" href="' . route($this->as . 'delete', $model) . '">Delete</a>';
-        })->useDataTable();
+        })->paginate(10);
 
         return view("bread::{$this->theme}.index", compact('tableView'))
             ->with('data', $this->data());
     }
 
-    public function getTableFields()
+    protected function getTableFields()
     {
-        return $this->tableFields;
+        return [];
     }
 
     protected function data()
     {
-        return [
-            'as'            => $this->as,
-            'name'          => $this->name,
-            'redirectTo'    => $this->redirectTo,
-            'fillable'      => $this->types,
-            'create_fields' => $this->getFields(),
-            'update_fields' => $this->getFields(true),
-            'selects'       => $this->getSelects()
+        $basename = explode('\\', basename($this->modelClass));
+        $basename = end($basename);
+
+        $data = [
+            'as'         => strtolower(str_plural($basename)) . '.',
+            'name'       => ucfirst($basename),
+            'redirectTo' => route(strtolower(str_plural($basename)) . '.index'),
+            'fillable'   => $this->getTableFields(),
+            'fields'     => $this->getFields(),
         ];
+
+        if (method_exists($this, 'getBreadOptions')) {
+            $data = array_merge($data, $this->getBreadOptions());
+        }
+
+        return $data;
     }
 
     public function getFields($update = false)
     {
-        $fields = collect($update ? ($this->updateValidation ?? $this->createValidation) : $this->createValidation);
+        $fields = $this->getFieldOptions();
 
-        $types = collect($this->types);
-
-        return $fields->map(function ($value, $key) use ($types) {
-            if ($types->has($key)) {
-                if (is_array($value)) {
-                    $value[] = $types->get($key);
-                } else {
-                    $value = [$value, $types->get($key)];
-                }
+        foreach ($fields as $key => &$field) {
+            if (!isset($field['title'])) {
+                $field['title'] = ucfirst(explode('_', $key)[0]);
             }
 
-            return $value;
-        });
+            if ($field['type'] == BreadType::IMAGE && !str_contains('image', $field['validation'])) {
+                $field['validation'][] = 'image';
+            }
+
+            if (!isset($field['update_validation'])) {
+                $field['update_validation'] = $field['validation'];
+            }
+        }
+
+        return $fields;
     }
 
-    private function getSelects()
+    public function getFieldOptions()
     {
-        $selects = [];
-        collect($this->types)->each(function ($type, $key) use (&$selects) {
-            if ($type == 'select') {
-                if (isset($this->selects[$key])) {
-                    $data = explode('|', $this->selects[$key]);
-                    $method = $data[0];
-                    $k = 'id';
-                    $v = 'name';
-
-                    if (isset($data[1])) {
-                        $data = explode(',', $data[1]);
-                        $k = $data[0];
-                        $v = $data[1];
-                    }
-
-                    foreach ($this->$method() as $item) {
-                        $selects[$key][$item[$k]] = $item[$v];
-                    }
-                }
-            }
-        });
-
-        return $selects;
+        return [];
     }
 
     /**
@@ -134,10 +115,13 @@ class BreadController extends Controller
      */
     public function store()
     {
-        $data = request()->validate($this->createValidation);
+        $validation = collect($this->getFields())->map(function ($item) {
+            return $item['validation'];
+        })->toArray();
 
+        $data = request()->validate($validation);
 
-        foreach ($this->createValidation as $key => $item) {
+        foreach ($validation as $key => $item) {
             $item = collect($item);
 
             if ($item->contains('image') && request()->hasFile($key)) {
@@ -145,7 +129,7 @@ class BreadController extends Controller
             }
         }
 
-        $this->modelClass::create($data);
+        $this->modelClass::forceCreate($data);
 
         return redirect($this->redirectTo);
     }
@@ -154,12 +138,12 @@ class BreadController extends Controller
     {
         if (!$file_name) {
 
-
             $filename = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
             $extension = pathinfo($file->getClientOriginalName(), PATHINFO_EXTENSION);
 
             $file_name = str_slug($filename) . '-' . time() . '.' . $extension;
         }
+
         $path = $file->storePubliclyAs($path, $file_name, 'public');
 
         return $path;
@@ -190,9 +174,13 @@ class BreadController extends Controller
     {
         $model = $this->getModel($model);
 
-        $data = request()->validate($this->updateValidation ?? $this->createValidation);
+        $validation = collect($this->getFields())->map(function ($item) {
+            return $item['update_validation'];
+        })->toArray();
 
-        foreach ($this->createValidation as $key => $item) {
+        $data = request()->validate($validation);
+
+        foreach ($validation as $key => $item) {
             $item = collect($item);
 
             if ($item->contains('image') && request()->hasFile($key)) {
@@ -231,5 +219,21 @@ class BreadController extends Controller
         }
 
         return redirect($this->redirectTo);
+    }
+
+    public function __get($name)
+    {
+        if (method_exists($this, $name))
+            return $this->{$name}();
+
+        if (method_exists($this, 'get' . ucfirst($name)))
+            return $this->{'get' . ucfirst($name)}();
+
+        return $this->data()[$name];
+    }
+
+    protected function getTheme()
+    {
+        return config('bread.theme', 'inspinia');
     }
 }

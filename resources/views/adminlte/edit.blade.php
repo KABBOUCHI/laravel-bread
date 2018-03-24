@@ -8,13 +8,13 @@
 @section(config('bread.layout.content'))
     <div class="row">
         <div class="col-lg-12">
-            <div class="ibox float-e-margins">
-                <div class="ibox-title">
+            <div class="box box-info">
+                <div class="box-header">
 
                     <h5>Edit {{ $data['name'] }}</h5>
 
                 </div>
-                <div class="ibox-content">
+                <div class="box-body">
                     @if ($errors->any())
                         <div class="alert alert-danger">
                             <ul>
