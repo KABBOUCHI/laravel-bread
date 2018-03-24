@@ -1,0 +1,41 @@
+{
+  "name": "kabbouchi/laravel-bread",
+  "description": "",
+  "keywords": [
+    "laravel",
+    "bread",
+    "crud",
+    "CMS",
+    "admin",
+    "admin panel",
+    "content management system"
+  ],
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Georges KABBOUCHI",
+      "email": "georges.kabbouchi@gmail.com"
+    }
+  ],
+  "autoload": {
+    "psr-4": {
+      "KABBOUCHI\\Bread\\": "src/"
+    }
+  },
+  "require": {
+    "php": ">=5.4",
+    "illuminate/support": "~5",
+    "illuminate/pagination": "~5"
+  },
+  "extra": {
+    "laravel": {
+      "providers": [
+        "KABBOUCHI\\Bread\\BreadServiceProvider"
+      ],
+      "aliases": {
+        "Bread": "KABBOUCHI\\Bread\\Facades\\Bread"
+      }
+    }
+  },
+  "minimum-stability": "stable"
+}
