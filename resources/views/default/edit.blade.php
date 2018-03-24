@@ -6,15 +6,15 @@
 
 
 @section(config('bread.layout.content'))
-    <div class="row">
-        <div class="col-lg-12">
-            <div class="panel panel-info">
-                <div class="panel-header">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header text-right">
 
                     <h5>Edit {{ $data['name'] }}</h5>
 
                 </div>
-                <div class="panel-body">
+                <div class="card-body">
                     @if ($errors->any())
                         <div class="alert alert-danger">
                             <ul>

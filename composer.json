@@ -24,7 +24,7 @@
   },
   "require": {
     "php": ">=7.0",
-    "kabbouchi/laravel-table-view": "^0.1.4",
+    "kabbouchi/laravel-table-view": "^0.1.5",
     "illuminate/support": "~5.5",
     "illuminate/pagination": "~5.5"
   },
