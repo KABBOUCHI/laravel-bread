@@ -68,6 +68,16 @@
                                                 > {{$option[$item['select']['name']]}}</option>
                                             @endforeach
                                         </select>
+                                    @elseif($item['type'] == BreadType::MULTIPLE_SELECT)
+                                        <select name="{{$key}}[]" id="{{$key}}" class="form-control" multiple>
+                                            @foreach($item['select']['data'] as $option)
+                                                <option value="{{$option[$item['select']['value']]}}"
+                                                        @if(str_contains($option[$item['select']['value']],old($key,$model->{$key})))
+                                                        selected
+                                                        @endif
+                                                > {{$option[$item['select']['name']]}}</option>
+                                            @endforeach
+                                        </select>
                                     @elseif($item['type'] == BreadType::DATETIME)
                                         <input type="datetime-local"
                                                id="{{$key}}"

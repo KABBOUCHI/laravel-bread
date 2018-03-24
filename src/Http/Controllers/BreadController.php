@@ -180,6 +180,7 @@ class BreadController extends Controller
 
         $data = request()->validate($validation);
 
+
         foreach ($validation as $key => $item) {
             $item = collect($item);
 
@@ -187,6 +188,8 @@ class BreadController extends Controller
                 $data[$key] = $this->upload(request()->file($key), 'images/' . strtolower($this->name));
             }
         }
+
+        Model::unguard();
 
         $model->update($data);
 
