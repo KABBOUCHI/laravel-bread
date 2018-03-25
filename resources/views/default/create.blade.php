@@ -98,6 +98,14 @@
                                                name="{{$key}}"
                                                @if(str_contains("required",$item['validation'])) required @endif
                                         >
+                                    @elseif($item['type'] == BreadType::IMAGES)
+                                        <input type="file"
+                                               id="{{$key}}"
+                                               class="form-control"
+                                               name="{{$key}}[]"
+                                               multiple
+                                               @if(str_contains("required",$item['validation'])) required @endif
+                                        >
                                     @elseif($item['type'] == BreadType::TEXT_AREA || $item['type'] == BreadType::RICH_TEXT)
                                         <textarea
                                                 id="{{$key}}"

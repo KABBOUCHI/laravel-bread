@@ -97,7 +97,7 @@ class BreadController extends Controller
         return $fields;
     }
 
-    public function getFieldOptions()
+    protected function getFieldOptions()
     {
         return [];
     }
