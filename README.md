@@ -25,7 +25,7 @@ class UsersController extends BreadController
 {
     protected $modelClass = User::class;
 
-    public function getFieldOptions()
+    public function getFieldOptions(Model $model)
     {
         return [
             'avatar'      => [
@@ -40,7 +40,8 @@ class UsersController extends BreadController
             ],
             'email'       => [
                 'type'       => BreadType::EMAIL,
-                'validation' => ['required', 'unique:users']
+                'validation' => ['required', 'unique:users'],
+                'update_validation' => ['required', 'unique:users,email,' . $model->id]
             ],
             'password'    => [
                 'type'       => BreadType::PASSWORD,
