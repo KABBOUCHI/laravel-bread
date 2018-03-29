@@ -76,9 +76,9 @@ class BreadController extends Controller
         return $data;
     }
 
-    public function getFields($update = false)
+    public function getFields(Model $model = null)
     {
-        $fields = $this->getFieldOptions();
+        $fields = $this->getFieldOptions($model ?? new $this->modelClass);
 
         foreach ($fields as $key => &$field) {
             if (!isset($field['title'])) {
@@ -97,7 +97,7 @@ class BreadController extends Controller
         return $fields;
     }
 
-    protected function getFieldOptions()
+    protected function getFieldOptions(Model $model)
     {
         return [];
     }
@@ -174,12 +174,11 @@ class BreadController extends Controller
     {
         $model = $this->getModel($model);
 
-        $validation = collect($this->getFields())->map(function ($item) {
+        $validation = collect($this->getFields($model))->map(function ($item) {
             return $item['update_validation'];
         })->toArray();
 
         $data = request()->validate($validation);
-
 
         foreach ($validation as $key => $item) {
             $item = collect($item);

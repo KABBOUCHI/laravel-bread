@@ -7,12 +7,13 @@ use Illuminate\Http\Request;
 use DummyRootNamespaceHttp\Controllers\Controller;
 use KABBOUCHI\Bread\Http\Controllers\BreadController;
 use KABBOUCHI\Bread\Http\BreadType;
+use Illuminate\Database\Eloquent\Model;
 
 class DummyClass extends BreadController
 {
     protected $modelClass = DummyModelClass::class;
 
-    public function getFieldOptions()
+    public function getFieldOptions(Model $model)
     {
         return [
             'name' => [

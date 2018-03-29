@@ -24,12 +24,22 @@ class Bread extends Facade
         Route::delete("/{$name}/{model}", "{$controller}@destroy")->name("{$name}.destroy");
     }
 
+    public static function field($key, $item, $attributes = [], $value = null, $update = false)
+    {
+        $type = $item['type'];
+
+        $class = 'KABBOUCHI\\Bread\\Http\\Transformers\\' . studly_case(strtolower($type)) . 'Field';
+
+        return (new $class($key, collect($item), $attributes, $value, $update))->render();
+    }
+
     /**
      * Get the registered name of the component.
      *
      * @return string
      */
-    protected static function getFacadeAccessor()
+    protected
+    static function getFacadeAccessor()
     {
         return 'bread';
     }
