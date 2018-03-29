@@ -2,7 +2,6 @@
 
 namespace KABBOUCHI\Bread\Http\Transformers;
 
-
 use Illuminate\Support\HtmlString;
 
 class PasswordField extends Field
@@ -13,16 +12,16 @@ class PasswordField extends Field
             'type'     => 'password',
             'id'       => $this->key,
             'name'     => $this->key,
-            'required' => str_contains("required", $this->item[ $this->update ? 'update_validation' : 'validation' ])
+            'required' => str_contains('required', $this->item[$this->update ? 'update_validation' : 'validation'])
         ], $this->attributes);
 
-        $html = "<input ";
+        $html = '<input ';
 
         foreach ($attributes as $key => $value) {
             $html .= " {$key}='{$value}'";
         }
 
-        $html .= " >";
+        $html .= ' >';
 
         return new HtmlString($html);
     }

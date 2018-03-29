@@ -10,7 +10,7 @@ abstract class Field
     protected $value;
     protected $update;
 
-    public function __construct($key, $item, $attributes = [], $value, $update = false)
+    public function __construct($key, $item, $attributes, $value, $update = false)
     {
         $this->key = $key;
         $this->item = $item;
@@ -21,6 +21,5 @@ abstract class Field
 
     public function render()
     {
-        
     }
 }

@@ -2,9 +2,9 @@
 
 namespace KABBOUCHI\Bread\Console;
 
-use http\Exception\InvalidArgumentException;
-use Illuminate\Console\GeneratorCommand;
 use Illuminate\Support\Str;
+use Illuminate\Console\GeneratorCommand;
+use http\Exception\InvalidArgumentException;
 use Symfony\Component\Console\Input\InputArgument;
 
 class BreadMakeCommand extends GeneratorCommand
@@ -37,9 +37,8 @@ class BreadMakeCommand extends GeneratorCommand
      */
     protected function getStub()
     {
-        return __DIR__ . '/stubs/controller.stub';
+        return __DIR__.'/stubs/controller.stub';
     }
-
 
     /**
      * Get the default namespace for the class.
@@ -49,7 +48,7 @@ class BreadMakeCommand extends GeneratorCommand
      */
     protected function getDefaultNamespace($rootNamespace)
     {
-        return $rootNamespace . '\Http\Controllers';
+        return $rootNamespace.'\Http\Controllers';
     }
 
     /**
@@ -84,7 +83,7 @@ class BreadMakeCommand extends GeneratorCommand
     {
         $modelClass = $this->parseModel($this->argument('model'));
 
-        if (!class_exists($modelClass)) {
+        if (! class_exists($modelClass)) {
             if ($this->confirm("A {$modelClass} model does not exist. Do you want to generate it?", true)) {
                 $this->call('make:model', ['name' => $modelClass]);
             }
@@ -113,8 +112,8 @@ class BreadMakeCommand extends GeneratorCommand
 
         $model = trim(str_replace('/', '\\', $model), '\\');
 
-        if (!Str::startsWith($model, $rootNamespace = $this->laravel->getNamespace())) {
-            $model = $rootNamespace . $model;
+        if (! Str::startsWith($model, $rootNamespace = $this->laravel->getNamespace())) {
+            $model = $rootNamespace.$model;
         }
 
         return $model;
@@ -132,5 +131,4 @@ class BreadMakeCommand extends GeneratorCommand
             ['model', InputArgument::REQUIRED, 'Generate a resource controller for the given model.'],
         ];
     }
-
 }

@@ -2,7 +2,6 @@
 
 namespace KABBOUCHI\Bread\Http\Transformers;
 
-
 use Illuminate\Support\HtmlString;
 
 class ImagesField extends Field
@@ -12,18 +11,18 @@ class ImagesField extends Field
         $attributes = array_merge([
             'type'     => 'file',
             'id'       => $this->key,
-            'name'     => $this->key . '[]',
+            'name'     => $this->key.'[]',
             'accept'   => 'image/*',
-            'required' => str_contains("required", $this->item[ $this->update ? 'update_validation' : 'validation' ])
+            'required' => str_contains('required', $this->item[$this->update ? 'update_validation' : 'validation'])
         ], $this->attributes);
 
-        $html = "<input";
+        $html = '<input';
 
         foreach ($attributes as $key => $value) {
             $html .= " {$key}='{$value}'";
         }
 
-        $html .= " multiple>";
+        $html .= ' multiple>';
 
         return new HtmlString($html);
     }

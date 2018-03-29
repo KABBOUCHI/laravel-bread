@@ -2,7 +2,6 @@
 
 namespace KABBOUCHI\Bread\Http\Transformers;
 
-
 use Illuminate\Support\HtmlString;
 
 class EmailField extends Field
@@ -14,16 +13,16 @@ class EmailField extends Field
             'id'       => $this->key,
             'name'     => $this->key,
             'value'    => $this->value,
-            'required' => str_contains("required", $this->item[ $this->update ? 'update_validation' : 'validation' ])
+            'required' => str_contains('required', $this->item[$this->update ? 'update_validation' : 'validation'])
         ], $this->attributes);
 
-        $html = "<input ";
+        $html = '<input ';
 
         foreach ($attributes as $key => $value) {
             $html .= " {$key}='{$value}'";
         }
 
-        $html .= " >";
+        $html .= ' >';
 
         return new HtmlString($html);
     }

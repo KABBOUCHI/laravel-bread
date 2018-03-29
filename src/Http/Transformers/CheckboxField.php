@@ -2,7 +2,6 @@
 
 namespace KABBOUCHI\Bread\Http\Transformers;
 
-
 use Illuminate\Support\HtmlString;
 
 class CheckboxField extends Field
@@ -18,17 +17,17 @@ class CheckboxField extends Field
             'value'    => '1',
         ], $this->attributes);
 
-        if (!!$this->value) {
+        if ((bool) $this->value) {
             $attributes['checked'] = 'checked';
         }
 
-        $html .= "<input ";
+        $html .= '<input ';
 
         foreach ($attributes as $key => $value) {
             $html .= " {$key}='{$value}'";
         }
 
-        $html .= " >";
+        $html .= ' >';
 
         return new HtmlString($html);
     }

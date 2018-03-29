@@ -2,7 +2,6 @@
 
 namespace KABBOUCHI\Bread\Http\Transformers;
 
-
 use Illuminate\Support\HtmlString;
 
 class HiddenField extends Field
@@ -16,13 +15,13 @@ class HiddenField extends Field
             'value'     => $this->value,
         ], $this->attributes);
 
-        $html = "<input ";
+        $html = '<input ';
 
         foreach ($attributes as $key => $value) {
             $html .= " {$key}='{$value}'";
         }
 
-        $html .= " >";
+        $html .= ' >';
 
         return new HtmlString($html);
     }

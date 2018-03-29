@@ -2,8 +2,8 @@
 
 namespace KABBOUCHI\Bread\Facades;
 
-use Illuminate\Support\Facades\Facade;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Facade;
 
 class Bread extends Facade
 {
@@ -11,8 +11,8 @@ class Bread extends Facade
     {
         $name = strtolower($name);
 
-        if (!$controller) {
-            $controller = ucfirst($name) . "Controller";
+        if (! $controller) {
+            $controller = ucfirst($name).'Controller';
         }
 
         Route::get("/{$name}", "{$controller}@index")->name("{$name}.index");
@@ -28,7 +28,7 @@ class Bread extends Facade
     {
         $type = $item['type'];
 
-        $class = 'KABBOUCHI\\Bread\\Http\\Transformers\\' . studly_case(strtolower($type)) . 'Field';
+        $class = 'KABBOUCHI\\Bread\\Http\\Transformers\\'.studly_case(strtolower($type)).'Field';
 
         return (new $class($key, collect($item), $attributes, $value, $update))->render();
     }
@@ -38,8 +38,7 @@ class Bread extends Facade
      *
      * @return string
      */
-    protected
-    static function getFacadeAccessor()
+    protected static function getFacadeAccessor()
     {
         return 'bread';
     }

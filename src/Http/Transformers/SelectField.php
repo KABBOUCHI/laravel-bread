@@ -2,7 +2,6 @@
 
 namespace KABBOUCHI\Bread\Http\Transformers;
 
-
 use Illuminate\Support\HtmlString;
 
 class SelectField extends Field
@@ -14,30 +13,30 @@ class SelectField extends Field
             'id'       => $this->key,
             'name'     => $this->key,
             'value'    => $this->value,
-            'required' => str_contains("required", $this->item[ $this->update ? 'update_validation' : 'validation' ])
+            'required' => str_contains('required', $this->item[$this->update ? 'update_validation' : 'validation'])
         ], $this->attributes);
 
-        $html = "<select ";
+        $html = '<select ';
 
         foreach ($attributes as $key => $value) {
             $html .= " {$key}='{$value}'";
         }
 
-        $html .= " >";
+        $html .= ' >';
 
         foreach ($this->item['select']['data'] as $option):
 
             $html .= "<option value='{$option[$this->item['select']['value']]}'";
 
-            if ($this->value == $option[$this->item['select']['value']]):
-                $html .= " selected";
-            endif;
+        if ($this->value == $option[$this->item['select']['value']]):
+                $html .= ' selected';
+        endif;
 
-            $html .= "> {$option[$this->item['select']['name']]}</option>";
+        $html .= "> {$option[$this->item['select']['name']]}</option>";
 
         endforeach;
 
-        $html .= "</select>";
+        $html .= '</select>';
 
         return new HtmlString($html);
     }
