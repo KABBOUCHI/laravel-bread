@@ -9,12 +9,15 @@ class ColorField extends Field
     public function render()
     {
         $attributes = array_merge([
-            'type'     => 'color',
-            'id'       => $this->key,
-            'name'     => $this->key,
-            'value'     => $this->value,
-            'required' => str_contains('required', $this->item[$this->update ? 'update_validation' : 'validation'])
+            'type'  => 'color',
+            'id'    => $this->key,
+            'name'  => $this->key,
+            'value' => $this->value,
         ], $this->attributes);
+
+        if (str_contains('required', $this->item[$this->update ? 'update_validation' : 'validation'])) {
+            $attributes['required'] = true;
+        }
 
         $html = '<input ';
 

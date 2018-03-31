@@ -12,9 +12,10 @@ class FileField extends Field
             'type'     => 'file',
             'id'       => $this->key,
             'name'     => $this->key,
-            'required' => str_contains('required', $this->item[$this->update ? 'update_validation' : 'validation'])
         ], $this->attributes);
-
+        if (str_contains('required', $this->item[$this->update ? 'update_validation' : 'validation'])) {
+            $attributes['required'] = true;
+        }
         $html = '<input ';
 
         foreach ($attributes as $key => $value) {

@@ -12,9 +12,10 @@ class TextAreaField extends Field
             'id'       => $this->key,
             'name'     => $this->key,
             'class'     => 'form-control',
-            'required' => str_contains('required', $this->item[$this->update ? 'update_validation' : 'validation'])
         ], $this->attributes);
-
+        if (str_contains('required', $this->item[$this->update ? 'update_validation' : 'validation'])) {
+            $attributes['required'] = true;
+        }
         $html = '<textarea ';
 
         foreach ($attributes as $key => $value) {

@@ -13,9 +13,10 @@ class SelectField extends Field
             'id'       => $this->key,
             'name'     => $this->key,
             'value'    => $this->value,
-            'required' => str_contains('required', $this->item[$this->update ? 'update_validation' : 'validation'])
         ], $this->attributes);
-
+        if (str_contains('required', $this->item[$this->update ? 'update_validation' : 'validation'])) {
+            $attributes['required'] = true;
+        }
         $html = '<select ';
 
         foreach ($attributes as $key => $value) {
