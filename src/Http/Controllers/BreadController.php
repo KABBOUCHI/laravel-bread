@@ -2,10 +2,10 @@
 
 namespace KABBOUCHI\Bread\Http\Controllers;
 
-use App\Http\Controllers\Controller;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\UploadedFile;
 use KABBOUCHI\Bread\Http\BreadType;
+use App\Http\Controllers\Controller;
+use Illuminate\Database\Eloquent\Model;
 
 /**
  * @property  Model modelClass
@@ -43,8 +43,8 @@ class BreadController extends Controller
         }
 
         $tableView->column(function ($model) {
-            return '<a class="btn-white btn btn-xs" href="' . route($this->as . 'edit', $model) . '">Edit</a> &nbsp;' .
-                '<a class="btn-danger btn btn-xs" href="' . route($this->as . 'delete', $model) . '">Delete</a>';
+            return '<a class="btn-white btn btn-xs" href="'.route($this->as.'edit', $model).'">Edit</a> &nbsp;'.
+                '<a class="btn-danger btn btn-xs" href="'.route($this->as.'delete', $model).'">Delete</a>';
         })->paginate(10);
 
         return view("bread::{$this->theme}.index", compact('tableView'))
@@ -62,9 +62,9 @@ class BreadController extends Controller
         $basename = end($basename);
 
         $data = [
-            'as'         => strtolower(str_plural($basename)) . '.',
+            'as'         => strtolower(str_plural($basename)).'.',
             'name'       => ucfirst($basename),
-            'redirectTo' => route(strtolower(str_plural($basename)) . '.index'),
+            'redirectTo' => route(strtolower(str_plural($basename)).'.index'),
             'fillable'   => $this->getTableFields(),
             'fields'     => $this->getFields(),
         ];
@@ -81,15 +81,15 @@ class BreadController extends Controller
         $fields = $this->getFieldOptions($model ?? new $this->modelClass);
 
         foreach ($fields as $key => &$field) {
-            if (!isset($field['title'])) {
+            if (! isset($field['title'])) {
                 $field['title'] = ucfirst(explode('_', $key)[0]);
             }
 
-            if ($field['type'] == BreadType::IMAGE && !str_contains('image', $field['validation'])) {
+            if ($field['type'] == BreadType::IMAGE && ! str_contains('image', $field['validation'])) {
                 $field['validation'][] = 'image';
             }
 
-            if (!isset($field['update_validation'])) {
+            if (! isset($field['update_validation'])) {
                 $field['update_validation'] = $field['validation'];
             }
         }
@@ -125,7 +125,7 @@ class BreadController extends Controller
             $item = collect($item);
 
             if ($item->contains('image') && request()->hasFile($key)) {
-                $data[$key] = $this->upload(request()->file($key), 'images/' . strtolower($this->name));
+                $data[$key] = $this->upload(request()->file($key), 'images/'.strtolower($this->name));
             }
         }
 
@@ -136,11 +136,11 @@ class BreadController extends Controller
 
     public function upload(UploadedFile $file, $path, $file_name = null)
     {
-        if (!$file_name) {
+        if (! $file_name) {
             $filename = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
             $extension = pathinfo($file->getClientOriginalName(), PATHINFO_EXTENSION);
 
-            $file_name = str_slug($filename) . '-' . time() . '.' . $extension;
+            $file_name = str_slug($filename).'-'.time().'.'.$extension;
         }
 
         $path = $file->storePubliclyAs($path, $file_name, 'public');
@@ -187,7 +187,7 @@ class BreadController extends Controller
             $item = collect($item);
 
             if ($item->contains('image') && request()->hasFile($key)) {
-                $data[$key] = $this->upload(request()->file($key), 'images/' . strtolower($this->name));
+                $data[$key] = $this->upload(request()->file($key), 'images/'.strtolower($this->name));
             }
         }
 
@@ -231,8 +231,8 @@ class BreadController extends Controller
             return $this->{$name}();
         }
 
-        if (method_exists($this, 'get' . ucfirst($name))) {
-            return $this->{'get' . ucfirst($name)}();
+        if (method_exists($this, 'get'.ucfirst($name))) {
+            return $this->{'get'.ucfirst($name)}();
         }
 
         return $this->data()[$name];
