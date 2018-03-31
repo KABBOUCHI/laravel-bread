@@ -9,8 +9,9 @@ class MultipleSelectField extends Field
 {
     public function render()
     {
-        if ($this->value instanceof Collection)
+        if ($this->value instanceof Collection) {
             $this->value = $this->value->pluck($this->item['select']['value'])->toArray();
+        }
 
         $attributes = array_merge([
             'type'     => 'text',
