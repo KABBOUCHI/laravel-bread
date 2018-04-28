@@ -17,13 +17,20 @@ php artisan make:bread UsersController User
 
 ```php
 Bread::routes('users');
+// or specify a custom controller
+Bread::routes('users','UsersController');
 ```
 
 => `UsersController.php`
 ```php
-class UsersController extends BreadController
+class UsersController extends controller
 {
-    protected $modelClass = User::class;
+    use Bread;
+    
+    protected function model()
+    {
+        return User::class;
+    }
 
     public function getFieldOptions(Model $model)
     {

@@ -1,16 +1,10 @@
-<?php
+<?php namespace KABBOUCHI\Bread\Http\Controllers\Traits;
 
-namespace KABBOUCHI\Bread\Http\Controllers;
-
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\UploadedFile;
 use KABBOUCHI\Bread\Http\BreadType;
-use App\Http\Controllers\Controller;
-use Illuminate\Database\Eloquent\Model;
 
-/**
- * @property  Model modelClass
- */
-class BreadController extends Controller
+trait Bread
 {
     /**
      * @return \Illuminate\Http\RedirectResponse
@@ -18,7 +12,7 @@ class BreadController extends Controller
     public function index()
     {
         /** @var Model $model */
-        $model = new $this->modelClass;
+        $model = new $this->model();
         if ($model->usesTimestamps()) {
             $model = $model->latest()->get();
         } else {
@@ -43,8 +37,8 @@ class BreadController extends Controller
         }
 
         $tableView->column(function ($model) {
-            return '<a class="btn-white btn btn-xs" href="'.route($this->as.'edit', $model).'">Edit</a> &nbsp;'.
-                '<a class="btn-danger btn btn-xs" href="'.route($this->as.'delete', $model).'">Delete</a>';
+            return '<a class="btn-white btn btn-xs" href="' . route($this->as . 'edit', $model) . '">Edit</a> &nbsp;' .
+                '<a class="btn-danger btn btn-xs" href="' . route($this->as . 'delete', $model) . '">Delete</a>';
         })->paginate(10);
 
         return view("bread::{$this->theme}.index", compact('tableView'))
@@ -58,13 +52,13 @@ class BreadController extends Controller
 
     protected function data()
     {
-        $basename = explode('\\', basename($this->modelClass));
+        $basename = explode('\\', basename($this->model()));
         $basename = end($basename);
 
         $data = [
-            'as'         => strtolower(str_plural($basename)).'.',
+            'as'         => strtolower(str_plural($basename)) . '.',
             'name'       => ucfirst($basename),
-            'redirectTo' => route(strtolower(str_plural($basename)).'.index'),
+            'redirectTo' => route(strtolower(str_plural($basename)) . '.index'),
             'fillable'   => $this->getTableFields(),
             'fields'     => $this->getFields(),
         ];
@@ -78,28 +72,23 @@ class BreadController extends Controller
 
     public function getFields(Model $model = null)
     {
-        $fields = $this->getFieldOptions($model ?? new $this->modelClass);
+        $fields = $this->getFieldOptions($model ?? new $this->model());
 
         foreach ($fields as $key => &$field) {
-            if (! isset($field['title'])) {
+            if (!isset($field['title'])) {
                 $field['title'] = ucfirst(explode('_', $key)[0]);
             }
 
-            if ($field['type'] == BreadType::IMAGE && ! str_contains('image', $field['validation'])) {
+            if ($field['type'] == BreadType::IMAGE && !str_contains('image', $field['validation'])) {
                 $field['validation'][] = 'image';
             }
 
-            if (! isset($field['update_validation'])) {
+            if (!isset($field['update_validation'])) {
                 $field['update_validation'] = $field['validation'];
             }
         }
 
         return $fields;
-    }
-
-    protected function getFieldOptions(Model $model)
-    {
-        return [];
     }
 
     /**
@@ -125,22 +114,22 @@ class BreadController extends Controller
             $item = collect($item);
 
             if ($item->contains('image') && request()->hasFile($key)) {
-                $data[$key] = $this->upload(request()->file($key), 'images/'.strtolower($this->name));
+                $data[$key] = $this->upload(request()->file($key), 'images/' . strtolower($this->name));
             }
         }
 
-        $this->modelClass::forceCreate($data);
+        $this->model()::forceCreate($data);
 
         return redirect($this->redirectTo);
     }
 
     public function upload(UploadedFile $file, $path, $file_name = null)
     {
-        if (! $file_name) {
+        if (!$file_name) {
             $filename = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
             $extension = pathinfo($file->getClientOriginalName(), PATHINFO_EXTENSION);
 
-            $file_name = str_slug($filename).'-'.time().'.'.$extension;
+            $file_name = str_slug($filename) . '-' . time() . '.' . $extension;
         }
 
         $path = $file->storePubliclyAs($path, $file_name, 'public');
@@ -162,7 +151,7 @@ class BreadController extends Controller
     private function getModel($model)
     {
         /** @var Model $m */
-        $m = new $this->modelClass;
+        $m = new $this->model();
         $m = $m->where($m->getRouteKeyName(), $model)
             ->firstOrFail();
 
@@ -187,7 +176,7 @@ class BreadController extends Controller
             $item = collect($item);
 
             if ($item->contains('image') && request()->hasFile($key)) {
-                $data[$key] = $this->upload(request()->file($key), 'images/'.strtolower($this->name));
+                $data[$key] = $this->upload(request()->file($key), 'images/' . strtolower($this->name));
             }
         }
 
@@ -231,12 +220,16 @@ class BreadController extends Controller
             return $this->{$name}();
         }
 
-        if (method_exists($this, 'get'.ucfirst($name))) {
-            return $this->{'get'.ucfirst($name)}();
+        if (method_exists($this, 'get' . ucfirst($name))) {
+            return $this->{'get' . ucfirst($name)}();
         }
 
         return $this->data()[$name];
     }
+
+    abstract protected function model();
+
+    abstract protected function getFieldOptions($model);
 
     protected function getTheme()
     {
