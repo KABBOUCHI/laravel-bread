@@ -23,6 +23,11 @@ Bread::routes('users','UsersController');
 
 => `UsersController.php`
 ```php
+
+use App\User;
+use KABBOUCHI\Bread\Http\BreadType;
+use KABBOUCHI\Bread\Http\Controllers\Traits\Bread;
+
 class UsersController extends controller
 {
     use Bread;
