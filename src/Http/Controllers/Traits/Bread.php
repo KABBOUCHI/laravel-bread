@@ -1,8 +1,10 @@
-<?php namespace KABBOUCHI\Bread\Http\Controllers\Traits;
+<?php
 
-use Illuminate\Database\Eloquent\Model;
+namespace KABBOUCHI\Bread\Http\Controllers\Traits;
+
 use Illuminate\Http\UploadedFile;
 use KABBOUCHI\Bread\Http\BreadType;
+use Illuminate\Database\Eloquent\Model;
 
 trait Bread
 {
@@ -37,8 +39,8 @@ trait Bread
         }
 
         $tableView->column(function ($model) {
-            return '<a class="btn-white btn btn-xs" href="' . route($this->as . 'edit', $model) . '">Edit</a> &nbsp;' .
-                '<a class="btn-danger btn btn-xs" href="' . route($this->as . 'delete', $model) . '">Delete</a>';
+            return '<a class="btn-white btn btn-xs" href="'.route($this->as.'edit', $model).'">Edit</a> &nbsp;'.
+                '<a class="btn-danger btn btn-xs" href="'.route($this->as.'delete', $model).'">Delete</a>';
         })->paginate(10);
 
         return view("bread::{$this->theme}.index", compact('tableView'))
@@ -56,9 +58,9 @@ trait Bread
         $basename = end($basename);
 
         $data = [
-            'as'         => strtolower(str_plural($basename)) . '.',
+            'as'         => strtolower(str_plural($basename)).'.',
             'name'       => ucfirst($basename),
-            'redirectTo' => route(strtolower(str_plural($basename)) . '.index'),
+            'redirectTo' => route(strtolower(str_plural($basename)).'.index'),
             'fillable'   => $this->getTableFields(),
             'fields'     => $this->getFields(),
         ];
@@ -75,15 +77,15 @@ trait Bread
         $fields = $this->getFieldOptions($model ?? new $this->model());
 
         foreach ($fields as $key => &$field) {
-            if (!isset($field['title'])) {
+            if (! isset($field['title'])) {
                 $field['title'] = ucfirst(explode('_', $key)[0]);
             }
 
-            if ($field['type'] == BreadType::IMAGE && !str_contains('image', $field['validation'])) {
+            if ($field['type'] == BreadType::IMAGE && ! str_contains('image', $field['validation'])) {
                 $field['validation'][] = 'image';
             }
 
-            if (!isset($field['update_validation'])) {
+            if (! isset($field['update_validation'])) {
                 $field['update_validation'] = $field['validation'];
             }
         }
@@ -114,7 +116,7 @@ trait Bread
             $item = collect($item);
 
             if ($item->contains('image') && request()->hasFile($key)) {
-                $data[$key] = $this->upload(request()->file($key), 'images/' . strtolower($this->name));
+                $data[$key] = $this->upload(request()->file($key), 'images/'.strtolower($this->name));
             }
         }
 
@@ -125,11 +127,11 @@ trait Bread
 
     public function upload(UploadedFile $file, $path, $file_name = null)
     {
-        if (!$file_name) {
+        if (! $file_name) {
             $filename = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
             $extension = pathinfo($file->getClientOriginalName(), PATHINFO_EXTENSION);
 
-            $file_name = str_slug($filename) . '-' . time() . '.' . $extension;
+            $file_name = str_slug($filename).'-'.time().'.'.$extension;
         }
 
         $path = $file->storePubliclyAs($path, $file_name, 'public');
@@ -176,7 +178,7 @@ trait Bread
             $item = collect($item);
 
             if ($item->contains('image') && request()->hasFile($key)) {
-                $data[$key] = $this->upload(request()->file($key), 'images/' . strtolower($this->name));
+                $data[$key] = $this->upload(request()->file($key), 'images/'.strtolower($this->name));
             }
         }
 
@@ -220,8 +222,8 @@ trait Bread
             return $this->{$name}();
         }
 
-        if (method_exists($this, 'get' . ucfirst($name))) {
-            return $this->{'get' . ucfirst($name)}();
+        if (method_exists($this, 'get'.ucfirst($name))) {
+            return $this->{'get'.ucfirst($name)}();
         }
 
         return $this->data()[$name];
