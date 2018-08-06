@@ -45,7 +45,6 @@ class UsersController extends controller
                 'validation'        => ['required'],
                 'update_validation' => []
             ],
-            'name'        => [
             'name' => [
                 'type'       => BreadType::TEXT,
                 'validation' => ['required']
