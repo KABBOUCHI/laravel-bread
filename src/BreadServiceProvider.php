@@ -25,7 +25,15 @@ class BreadServiceProvider extends ServiceProvider
 
     private function registerResources()
     {
-        $this->loadViewsFrom(__DIR__.'/../resources/views', 'bread');
+        $this->loadViewsFrom(__DIR__ . '/../resources/views', 'bread');
+
+        $this->publishes([
+            __DIR__ . '/../config/bread.php' => config_path('bread.php'),
+        ], 'bread');
+
+        $this->publishes([
+            __DIR__ . '/../resources/views' => base_path('resources/views/vendor/bread'),
+        ], 'bread');
     }
 
     /**
@@ -36,7 +44,8 @@ class BreadServiceProvider extends ServiceProvider
     public function register()
     {
         $this->mergeConfigFrom(
-            __DIR__.'/../config/bread.php', 'bread'
+            __DIR__ . '/../config/bread.php',
+            'bread'
         );
 
         $this->registerCommands();
